@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using DSW_3P_PR03.Data;
 using DSW_3P_PR03.Repositories;
 using DSW_3P_PR03.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,8 +25,31 @@ builder.Services.AddDbContext<AppDbContext>(options =>
             builder.Configuration.GetConnectionString("SqlServerConnection")
     )
 );
+//Configuracion de JWT
+var jwt = builder.Configuration.GetSection("Jwt");
+var key = Convert.FromBase64String(
+   jwt["Key"] ?? throw new InvalidOperationException(
+       "Falta configurar Jwt:Key"));
+builder.Services
+   .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+   .AddJwtBearer(options =>
+   {
+       options.TokenValidationParameters =
+           new TokenValidationParameters
+           {
+               ValidateIssuer = true,
+               ValidIssuer = jwt["Issuer"],
+               ValidateAudience = true,
+               ValidAudience = jwt["Audience"],
+               ValidateLifetime = true,
+               ClockSkew = TimeSpan.Zero,
+               ValidateIssuerSigningKey = true,
+               IssuerSigningKey =
+                   new SymmetricSecurityKey(key)
+           };
+   });
 
-
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -35,6 +60,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseAuthentication();
+app.UseAuthorization();
 // Mapear los controladores
 app.MapControllers();
 

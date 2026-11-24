@@ -71,10 +71,14 @@ public class PersonajeSQLRepository : IPersonajeRepository
     }
 
     //Obtener por nivel
+
     public List<Personaje> ObtenerPorNivel(int nivel)
     {
-        return _context.Personajes.Where(p => p.Nivel == nivel).ToList();
+        return _context.Personajes
+            .Where(p => p.Nivel >= nivel)
+            .ToList();
     }
+
 
  
 

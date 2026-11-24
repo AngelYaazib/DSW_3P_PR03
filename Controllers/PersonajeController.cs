@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using DSW_3P_PR03.Models;
 using DSW_3P_PR03.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DSW_3P_PR03.Controllers;
 
 [ApiController]
 [Route("api/personajes")]
+[Authorize]
 public class PersonajeController : ControllerBase
 {
     private readonly IPersonajeService _service;
