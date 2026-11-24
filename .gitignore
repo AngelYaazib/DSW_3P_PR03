@@ -480,3 +480,37 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+
+# ==========================================
+# CONFIGURACION LOCAL Y DATOS SENSIBLES
+# ==========================================
+
+# Variables de entorno
+.env
+.env.*
+
+# Configuraciones locales
+appsettings.Development.json
+appsettings.json
+
+# Secretos
+secrets.json
+*.key
+*.pem
+*.p12
+
+# ==========================================
+# BASES DE DATOS Y RESPALDOS
+# ==========================================
+
+*.bak
+*.mdf
+*.ldf
+*.ndf
+
+# ==========================================
+# CERTIFICADOS
+# ==========================================
+
+*.pfx
