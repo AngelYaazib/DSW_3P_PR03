@@ -4,6 +4,7 @@ using DSW_3P_PR03.Repositories;
 using DSW_3P_PR03.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Cors;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +50,20 @@ builder.Services
            };
    });
 
+//Configurar Politica de CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("QuestLogFrontend", policy =>
+    {
+        policy.WithOrigins(
+                "http://localhost:5260",
+                "http://127.0.0.1:5500"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
@@ -62,6 +77,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors("QuestLogFrontend");
 // Mapear los controladores
 app.MapControllers();
 
